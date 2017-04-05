@@ -1,0 +1,163 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns:pe="http://primefaces.org/ui/extensions"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
+
+
+    <p:outputPanel styleClass="Container100 NoIndent">
+        <div class="Container100 Responsive100">
+            <div class="Card ui-fluid">
+                <!--标题-->
+                <h1 class="CardBigTopic Purple">
+                    <!--<h:outputText value="#{ctrlMaster.createPageTitle('TST', 'TST0001')}"/>-->
+                    <h:outputText value="测试 > 历史数据(TST0001)" />
+                </h1>
+                <div class="SeparatorFull"></div>
+
+<!--                <p:tabView id="tabview" activeIndex="#{ctrlTST0001.vm.tabIndex}">
+    <p:tab title="各分公司收费明细表" >-->
+                <p:panelGrid columns="8"
+                             id="canShu"
+                             layout="grid"
+                             styleClass="ui-panelgrid-blank"
+                             columnClasses="wd-p-10,wd-p-30,wd-p-10,wd-p-30,wd-p-10,wd-p-30,wd-p-10,wd-p-30">
+                    <p:outputLabel for="txtStartDate" value="日期"/>
+                    <p:calendar id="txtStartDate" value="#{ctrlTST0001.vm.chaXunRiQi}"
+                                placeholder="日期"
+                                mask="true" styleClass="tct"
+                                pattern="#{bizConfig.dateFormat}"
+                                required="true"
+                                requiredMessage="#{ctrlTST0001.isRequiredMessage('日期')}"
+                                size="12"
+                                converterMessage="#{ctrlTST0001.dateUnvalidMessage('日期')}"
+                                locale="#{bizConfig.locale}">
+                    </p:calendar>
+                    <p:outputLabel for="company" value="监控点"/>
+                    <p:selectOneMenu id="company" autoWidth="false" styleClass="wd-f-40" 
+                                     value="#{ctrlTST0001.vm.jkdId}" required="true"
+                                     requiredMessage="#{ctrlTST0001.isRequiredMessage('监控点')}">
+                        <f:selectItem itemLabel="全部" itemValue="全部"/>
+                        <f:selectItems value="#{ctrlTST0001.vm.yxtJkdList}"  var="items" 
+                                       itemLabel="#{items.jkdName}" itemValue="#{items.yxtJkdPK.jkdId}"/>
+                    </p:selectOneMenu>
+                    <p:outputLabel  value=" "/>
+                    <p:outputLabel  value=" "/>
+                    <p:outputLabel  value=" "/>
+                    <p:commandButton value="查询" process="canShu" styleClass="fr" actionListener="#{ctrlTST0001.chaXun()}" 
+                                     oncomplete="showErrorMsg();"
+                                     update="sfmx, canShu, frmMain:ovPnlValidation, frmMain:msgValidation, frmMain:growlMessage, frmMain:btnValidationPanel"/>
+                </p:panelGrid>
+                <p:outputPanel id="sfmx">
+                    <p:dataTable value="#{ctrlTST0001.vm.shuJuList}"
+                                 widgetVar="sfmxTable"
+                                 var="item"
+                                 style="word-break: keep-all!important"
+                                 sortBy="#{item.dateTime}"
+                                 id="sfmx_table"
+                                 paginator="true"
+                                 paginatorTemplate="{CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                                 rowsPerPageTemplate="10,30,50"
+                                 rows="10"
+                                 rendered="#{not empty ctrlTST0001.vm.shuJuList}"
+                                 emptyMessage="#{msg.mei_you_zhao_dao_ren_he_ji_lu}">
+                        <f:facet name="header">
+                            <h:outputText value="历史数据"  styleClass="Fs20"/>
+                            <h:commandLink  styleClass="fr">
+                                <i class="fa fa-file-excel-o Fs20 Blue">导出</i>
+                                <p:dataExporter type="xls" target="sfmx_table" fileName="baobiao" />
+                            </h:commandLink>
+                        </f:facet>
+                        <p:column sortBy="#{item.jkdId}" headerText="监控点" styleClass="wd-p-10 tct">
+                            <h:outputText value="#{item.jkdId}" />
+                        </p:column>
+                        <p:column sortBy="#{item.dateTime}" headerText="数据时间" styleClass="wd-p-30 tct">
+                            <h:outputText value="#{item.dateTime}" />
+                        </p:column>
+                        <p:column sortBy="#{item.ab}" headerText="状态" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.ab}" />
+                        </p:column>
+                        <p:column sortBy="#{item.g}" headerText="一次供温" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.g}" />
+                        </p:column>
+                        <p:column sortBy="#{item.h}" headerText="一次回温" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.h}" />
+                        </p:column>
+                        <p:column sortBy="#{item.k}" headerText="二次供温" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.k}" />
+                        </p:column>
+                        <p:column sortBy="#{item.l}" headerText="二次回温" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.l}" />
+                        </p:column>
+                        <p:column sortBy="#{item.i}" headerText="一次供压" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.i}" />
+                        </p:column>
+                        <p:column sortBy="#{item.j}" headerText="一次回压" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.j}" />
+                        </p:column>
+                        <p:column sortBy="#{item.y}" headerText="一次除污后压力" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.y}" />
+                        </p:column>
+                        <p:column sortBy="#{item.m}" headerText="二次供压" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.m}" />
+                        </p:column>
+                        <p:column sortBy="#{item.n}" headerText="二次回压" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.n}" />
+                        </p:column>
+                        <p:column sortBy="#{item.x}" headerText="二次除污后压力" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.x}" />
+                        </p:column>
+                        <p:column sortBy="#{item.a}" headerText="一次瞬时流量" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.a}" />
+                        </p:column>
+                        <p:column sortBy="#{item.s}" headerText="一次流量累计" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.s}" />
+                        </p:column>
+                        <p:column sortBy="#{item.b}" headerText="二次瞬时流量" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.b}" />
+                        </p:column>
+                        <p:column sortBy="#{item.r}" headerText="二次流量累计" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.r}" />
+                        </p:column>
+                        <p:column sortBy="#{item.c}" headerText="补水流量" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.c}" />
+                        </p:column>
+                        <p:column sortBy="#{item.q}" headerText="补水流量累计" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.q}" />
+                        </p:column>
+                        <p:column sortBy="#{item.d}" headerText="调节阀反馈" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.d}" />
+                        </p:column>
+                        <p:column sortBy="#{item.e}" headerText="循环泵反馈" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.e}" />
+                        </p:column>
+                        <p:column sortBy="#{item.f}" headerText="补水泵反馈" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.f}" />
+                        </p:column>
+                        <p:column sortBy="#{item.p}" headerText="液位" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.p}" />
+                        </p:column>
+                        <p:column sortBy="#{item.o}" headerText="室外温度" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.o}" />
+                        </p:column>
+                        <p:column sortBy="#{item.v}" headerText="一网瞬时热量" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.v}" />
+                        </p:column>
+                        <p:column sortBy="#{item.t}" headerText="一网累计热量" styleClass="wd-p-5 tct">
+                            <h:outputText value="#{item.t}" />
+                        </p:column>
+                    </p:dataTable>
+                    <p:outputPanel rendered="#{not empty ctrlTST0001.vm.yiCiWangWenDuModel}">
+                        <p:chart type="line" model="#{ctrlTST0001.vm.yiCiWangWenDuModel}"
+                                 rendered="#{not empty ctrlTST0001.vm.yiCiWangWenDuModel}"
+                                 style="height:300px;"
+                                 widgetVar="chart"/>
+                        <p:commandButton type="button" value="Reset" icon="ui-icon-cancel" onclick="PF('chart').resetZoom()"/>
+                    </p:outputPanel>
+                </p:outputPanel>
+            </div>
+        </div>
+    </p:outputPanel>
+</ui:composition>
